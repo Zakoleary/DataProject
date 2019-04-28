@@ -21,6 +21,9 @@ ggplot(data1, aes(date, price)) + geom_line() + scale_x_date("Year")
 Dublin <- subset(data1, ppr_county=="Dublin",
                  select=c(price, year, date))
 
+Dublin <- Dublin[sample(1:nrow(Dublin), 10000,
+                        replace = FALSE)]
+
 #Set up Dublin subset for date class 
 
 Dublin$date =as.Date(Dublin$date)
@@ -86,13 +89,13 @@ tsdisplay(residuals(fit2), lag.max = 45, main = "Seasonal Model Residuals")
 fit3 <- arima(deseasonal_cnt, order = c(1,0,7))
 tsdisplay(residuals(fit3), lag.max = 60, main = "ARIMA Model Residuals")
 
-fcast <- forecast(fit2, h = 5000)
+fcast <- forecast(fit2, h = 1000)
 plot(fcast)
 
 #Test model performance
-hold <- window(ts(deseasonal_cnt), start = 60310)
-fit_no_holdout = arima(ts(deseasonal_cnt[-c(60310:70310)]), order = c(1,1,7))
-fcast_no_holdout <- forecast(fit_no_holdout, h = 10000)
+hold <- window(ts(deseasonal_cnt), start = 8000)
+fit_no_holdout = arima(ts(deseasonal_cnt[-c(8000:10000)]), order = c(1,1,7))
+fcast_no_holdout <- forecast(fit_no_holdout, h = 1000)
 plot(fcast_no_holdout, main = "")
 #lines(ts(deseasonal_cnt))
 #col = rgb(0, 0, 0, 0.15)
